@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+const App = () => {
+  const [posts, setPosts] = useState([]);
+  useEffect(() => {
+    axios
+      .get("http://localhost/wordpress/wp-json/wp/v2/posts?_embed")
+      .then((res) => setPosts(res.data));
+  }, []);
+  const postsJsx = posts.map((post) => (
+    <li
+      key={post.id}
+      dangerouslySetInnerHTML={{ __html: post.content.rendered }}
+    ></li>
+  ));
+  return <ul>{postsJsx}</ul>;
+};
 export default App;
